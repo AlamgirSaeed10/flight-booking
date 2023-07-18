@@ -62,7 +62,7 @@ Route::post('/store_recipt_image',[PendingController::class,'store_recipt_image'
 Route::post('/update_recipt_image',[PendingController::class,'update_recipt_image'])->name('update_recipt_image');
 Route::post('/cancel_ticket',[PendingController::class,'cancel_ticket'])->name('cancel_ticket');
 
-
+Route::get('view-tivket',[HomeController::class,'update'])->name('update');
 
 Route::get('/edit-tickets/{InvoiceNo}',[PendingController::class,'edit_tickets'])->name('edit-tickets');
 Route::post('/update-tickets/{InvoiceNo}',[PendingController::class,'update_tickets'])->name('update-tickets');

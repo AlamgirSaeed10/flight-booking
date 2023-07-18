@@ -1,5 +1,26 @@
 @extends('layouts.header')
 @section('content')
+
+
+
+
+
+
+
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css"
+        rel="stylesheet" />
+    <script>
+        $.fn.poshytip = {
+            defaults: null
+        }
+    </script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js">
+    </script>
+
+
+
 <script src="https://cdn.tiny.cloud/1/8ocium3ymud15bb8sswaevn9jxk0jo821fjmyfwj7yml17bw/tinymce/6/tinymce.min.js"></script>
     <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <div class="container-fluid">
@@ -106,7 +127,7 @@
                                             <strong>City</strong>
                                         </label>
                                         <p>{{ $customer_details[0]->CustomerCity }}</p>
-                                    </div>
+                                    </div>a
                                     <div class="col-md-3">
                                         <label class="control-label text-left">
                                             <strong>PostCode</strong>
@@ -370,7 +391,7 @@
                                     <div class="d-sm-flex align-items-center justify-content-between">
                                         <h4 class="font-size-18 text-white">Passenger Details</h4>
                                         <div class="page-title-right">
-                                            <a class="btn btn-info btn-sm edit">
+                                            <a class="btn btn-info btn-sm edit" data-bs-toggle="modal" data-bs-target=".bs-example-modal-xl">
                                                 <i class="fas fa-pencil-alt"></i>
                                                 Edit Passanger
                                             </a>
@@ -395,9 +416,12 @@
                                             <tbody>
                                                 <?php
                       $total_amount=0;
+                      $sub_total = 0;
+                      $total_balance=0;
+                      
 
                       foreach ($passanger_details as $key => $value):
-                        $total_amount += (($value->SeatQty*$value->SeatPrice)+$value->BookingFee);
+                        $total_amount = (($value->SeatQty*$value->SeatPrice)+$value->BookingFee);
                         ?>
 
                                                 <tr class="border-dark">
@@ -408,20 +432,22 @@
                                                     <td class="text-center">{{ $value->SeatQty }}</td>
                                                     <td class="text-center">{{ $value->SeatPrice }}</td>
                                                     <td class="text-center">{{ $value->BookingFee }}</td>
-                                                    <td class="text-center">{{ $total_amount }}</td>
+                                                    <td class="text-center">{{ number_format($total_amount,2) }}</td>
                                                 </tr>
-                                                <?php endforeach ?>
+                                                <?php
+                                                $sub_total +=$total_amount; 
+                                                endforeach ?>
                                             </tbody>
 
                                             <tfoot>
                                                 <tr class="border-dark">
                                                     <td colspan="1" class="text-right"><strong>Total Sale
                                                             Price:</strong> <strong
-                                                            class="text-danger">{{ number_format($total_amount, 2) }}</strong>
+                                                            class="text-danger">{{ number_format($sub_total, 2) }}</strong>
                                                     </td>
                                                     <td colspan="6"></td>
                                                     <td colspan="1" class="text-end"><strong>Profit:</strong> <strong
-                                                            class="text-danger">{{ number_format($total_amount, 2) }}</strong>
+                                                            class="text-danger">{{ number_format($sub_total, 2) }}</strong>
                                                     </td>
                                                 </tr>
                                             </tfoot>
@@ -429,6 +455,45 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card mb-3">
+                                <div class="card-header bg-dark">
+                                    <h4 class="card-title text-white">Receipts from Customer</h4>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0 border-dark">
+                                            <thead class="bg-dark text-white ">
+                                                <tr>
+                                                    <th class="text-center">Recipt ID</th>
+                                                    <th class="text-center">Paid By</th>
+                                                    <th class="text-center">Receipt Date</th>
+                                                    <th class="text-center">payment Mode</th>
+                                                    <th class="text-center">£ Received</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($recipt_details as $key => $value)
+                                                <?php $total_balance += $value->CashAmount+$value->CardAmount+$value->BankAmount+$value->OtherAmount;?>
+                                                <tr class="border-dark">
+                                                    <td class="text-center">{{  $value->ReciptID !== null ? $value->ReciptID :'-' }}</td>
+                                                    <td class="text-center">{{  $value->PayingBy !== null ? $value->PayingBy :'-' }}</td>
+                                                    <td class="text-center">{{ $value->PaymentDate !== null ?date('Y-m-d',strtotime($value->PaymentDate)) :'-' }}</td>
+                                                    <td class="text-center">{{  $value->ReciptMode !== null ? $value->ReciptMode :'-' }}</td>
+                                                    <td class="text-center">{{ $value->ReciptMode === 'Cash' ? $value->CashAmount : ( $value->ReciptMode === 'Card' ? $value->CardAmount : ($value->ReciptMode === 'Bank Transfer' ? $value->BankAmount : ($value->ReciptMode === 'Other' ? $value->OtherAmount : '-')))}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                       <tfoot>
+                                                <tr class="border-dark">
+                                                    <td colspan="5" class="text-end"><strong>Total</strong> <strong
+                                                            class="text-danger">{{ number_format($total_balance, 2) }}</strong>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                             <div class="card mb-3">
                                 <div class="card-body ">
                                     <div class="row">
@@ -507,6 +572,117 @@
                 </div>
             </div>
         </div>
+        
+        
+        <div class="modal fade bs-example-modal-xl" tabindex="-1" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="myExtraLargeModalLabel">Extra large modal</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                           <div class="modal-body">
+                                                             <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                         <table class="table table-bordered table-striped">
+                <!-- Table header -->
+                <thead>
+                    <tr>
+                        <th class="text-center">Sr.#</th>
+                        <th class="text-center">Passenger Name</th>
+                        <th class="text-center">Passenger DOB</th>
+                        <th class="text-center">Passenger Type</th>
+                        <th class="text-center">Seat Qty</th>
+                        <th class="text-center">Ticket Price</th>
+                        <th class="text-center">Booking Fee</th>
+                        <th class="text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $total_amount = 0;
+                    $sub_total = 0;
+                    $total_balance = 0;
+
+                    foreach ($passanger_details as $key => $value):
+                        $total_amount = (($value->SeatQty * $value->SeatPrice) + $value->BookingFee);
+                    ?>
+
+                        <tr class="border-dark">
+                            <td class="text-center">{{ ++$key }}</td>
+                            <td class="text-center">
+                                <!-- Add the 'update_record' class and data attributes for x-editable -->
+                                <a href="#" class="update_record"
+                                    data-name="PassengerName"
+                                    data-type="text"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Enter Passenger Name">{{ $value->PassengerName }}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="update_record"
+                                    data-name="PassengerDOB"
+                                    data-type="date"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Select Passenger DOB">{{ $value->PassengerDOB }}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="update_record"
+                                    data-name="PassengerType"
+                                    data-type="select"
+                                    data-source="[{value: 'Regular', text: 'Regular'}, {value: 'VIP', text: 'VIP'}]"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Select Passenger Type">{{ $value->PassengerType }}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="update_record"
+                                    data-name="SeatQty"
+                                    data-type="number"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Enter Seat Quantity">{{ $value->SeatQty }}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="update_record"
+                                    data-name="SeatPrice"
+                                    data-type="text"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Enter Ticket Price">{{ $value->SeatPrice }}</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="update_record"
+                                    data-name="BookingFee"
+                                    data-type="text"
+                                    data-pk="{{ $value->CustomerID }}"
+                                    data-title="Enter Booking Fee">{{ $value->BookingFee }}</a>
+                            </td>
+                            <td class="text-center">{{ number_format($total_amount, 2) }}</td>
+                        </tr>
+
+                        <?php
+                        $sub_total += $total_amount;
+                    endforeach;
+                    ?>
+                </tbody>
+
+                <tfoot>
+                    <tr class="border-dark">
+                        <td colspan="1" class="text-right"><strong>Total Sale Price:</strong>
+                            <strong class="text-danger">{{ number_format($sub_total, 2) }}</strong>
+                        </td>
+                        <td colspan="7"></td>
+                    </tr>
+                </tfoot>
+            </table>
+                                    </div>
+                                </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+ 
+        
+        
         <!-- Start your work from modal class -->
         <div class="modal fade" id="payment_req" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -598,6 +774,10 @@
                 </div>
             </div>
         </div>
+        
+        
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+     
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).on('change', '#payment_type', function() {
@@ -685,5 +865,38 @@ tinymce.init({
             readonly: true
 });
 
-        </script>
-    @endsection
+        
+    
+        // Initialize x-editable on document ready
+        $(document).ready(function () {
+            $.fn.editable.defaults.mode = 'inline';
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+
+            // Initialize x-editable on the elements with the 'update_record' class
+            $('.update_record').editable({
+                // Set the URL for AJAX update requests
+                url: "{{ route('update') }}",
+                // Specify the data type for the editable content
+                type: function() {
+                    return $(this).data('type');
+                },
+                // Specify the primary key (passenger_id) for each record
+                pk: function () {
+                    return $(this).data('pk');
+                },
+                // Specify the name of the column to be updated
+                name: function () {
+                    return $(this).data('name');
+                },
+                // Add other options as needed (e.g., validation, callbacks, etc.)
+                // ... (add any other options as needed)
+            });
+        });
+    </script>
+@endsection
+
