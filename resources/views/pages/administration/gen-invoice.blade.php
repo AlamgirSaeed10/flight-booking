@@ -107,6 +107,21 @@
                 </div>
             </div>
 
+
+
+
+
+            <div class="row mt-3">
+                <h5 class="mb-2 p-2 bg-secondary text-white">PNR Details</h5>
+
+                <div class="col-6">
+                    {{$customer_details[0]->PNRDetails}}
+
+                </div>
+
+
+            </div>
+
             <div class="row mt-3">
                 <div class="table-responsive">
                     <table class="table table-condensed">
@@ -132,7 +147,7 @@
                                     $booking_fee += $value->BookingFee;
                                     $line_total = $value->SeatQty * $value->SeatPrice;
                                     $total += $line_total;
-                                    $grand = $booking_fee + $line_total;
+                                    $grand = $booking_fee + $total;
                                 @endphp
                                 <tr>
                                     <td width="10%" class="text-center">{{ ++$key }}</td>

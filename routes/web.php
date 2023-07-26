@@ -62,14 +62,20 @@ Route::post('/store_recipt_image',[PendingController::class,'store_recipt_image'
 Route::post('/update_recipt_image',[PendingController::class,'update_recipt_image'])->name('update_recipt_image');
 Route::post('/cancel_ticket',[PendingController::class,'cancel_ticket'])->name('cancel_ticket');
 
-Route::get('view-tivket',[HomeController::class,'update'])->name('update');
+Route::post('view-ticket',[HomeController::class,'update'])->name('update');
 
 Route::get('/edit-tickets/{InvoiceNo}',[PendingController::class,'edit_tickets'])->name('edit-tickets');
 Route::post('/update-tickets/{InvoiceNo}',[PendingController::class,'update_tickets'])->name('update-tickets');
 
 
 
+Route::get('profile',[DashboardController::class,'admin_profile'])->name('admin.profile');
+Route::post('update-profile',[DashboardController::class,'update_profile'])->name('admin.update-profile');
 
+
+Route::get('agent-profile/{AgentID}',[DashboardController::class,'view_agent_profile'])->name('admin.agent-profile');
+Route::post('block-agent',[DashboardController::class,'block_agent'])->name('admin.block-agent');
+Route::post('update-agent-profile',[DashboardController::class,'update_agent_profile'])->name('admin.update-agent-profile');
 
 
 

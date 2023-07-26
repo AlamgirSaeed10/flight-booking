@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -12,29 +13,23 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-    
 
-public function update(Request $request)
+
+    public function update(Request $request)
     {
-        if ($request->ajax()) {
-            // Assuming 'passenger_details' is a collection of passenger data, you can replace it with your data source
-            foreach ($request->passenger_details as $data) {
-                // Assuming 'id' is the primary key for the passenger record
-                $passengerId = $data['pk'];
+        $bookingID = $request->pk; // BookingID from the data-pk attribute in HTML
+        $fieldName = $request->name; // Field name from the data-name attribute in HTML
+        $fieldValue = $request->value; // New value from the editable field
 
-                // Assuming 'name' is the column name to be updated and 'value' is the new value for that column
-                $field = $data['name'];
-                $value = $data['value'];
+        // Update the field based on the field name
+        $affectedRows = DB::table('customer_booking_details')
+            ->where('BookingID', $bookingID)
+            ->update([$fieldName => $fieldValue]);
 
-                // Update the passenger record with the new value
-                DB::table('passengers')->where('CustomerID', $passengerId)->update([
-                    $field => $value
-                ]);
-            }
-
-            return response()->json(['success' => true]);
+        if ($affectedRows) {
+            return response()->json(['status' => 'success']);
         }
-    }
 
-    
+        return response()->json(['status' => 'error', 'message' => 'Failed to update field']);
+    }
 }

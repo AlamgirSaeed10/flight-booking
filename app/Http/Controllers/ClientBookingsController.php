@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB,Schema,Auth;
-use Validator;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ClientBookingsController extends Controller
 {
@@ -14,96 +15,100 @@ class ClientBookingsController extends Controller
         $this->middleware('auth');
     }
 
-
-    function booking_flight(){
+    function booking_flight()
+    {
         $lastInvoiceNo = DB::table('customer_details')->orderBy('InvoiceNo', 'DESC')->first();
-            if ($lastInvoiceNo) {
-              $lastInvoice = intval(substr($lastInvoiceNo->InvoiceNo, 4)) + 1;
-              $newInvoice = 'ZIS-' . str_pad($lastInvoice, 4, '0', STR_PAD_LEFT);
-            } else {
-              $newInvoice = 'ZIS-0001';
-            }
+        if ($lastInvoiceNo) {
+            $lastInvoice = (int)substr($lastInvoiceNo->InvoiceNo, 4) + 1;
+            $newInvoice = 'ZIS-' . str_pad($lastInvoice, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newInvoice = 'ZIS-0001';
+        }
 
         $title = "Booking Form";
-        return view("pages.client-booking.booking",compact('title','newInvoice'));
+        return view("pages.client-booking.booking", compact('title', 'newInvoice'));
     }
 
-    function issued_tickets(){
+    function issued_tickets()
+    {
         $title = "Issued Tickets";
-        return view('pages.client-booking.issued-tickets',compact('title'));
+        return view('pages.client-booking.issued-tickets', compact('title'));
     }
-    function cancelled_booking(){
+
+    function cancelled_booking()
+    {
         $title = "Cancelled Booking";
-        $cancelled_booking = DB::table('customer_details')->where('BookingStatus','=','Cancelled')->get();
-        return view('pages.client-booking.cancelled-booking',compact('title','cancelled_booking'));
+        $cancelled_booking = DB::table('customer_details')->where('BookingStatus', '=', 'Cancelled')->get();
+        return view('pages.client-booking.cancelled-booking', compact('title', 'cancelled_booking'));
     }
-    function hold_bookings(){
+
+    function hold_bookings()
+    {
         $title = "Hold Bookings";
-        return view('pages.client-booking.hold-bookings',compact('title'));
+        return view('pages.client-booking.hold-bookings', compact('title'));
     }
-    function search_bookings(){
+
+    function search_bookings()
+    {
         $tableName = 'customer_details';
         $col_name = Schema::getColumnListing($tableName);
         $title = "Search Bookings";
-        return view('pages.client-booking.search-bookings',compact('title','col_name'));
+        return view('pages.client-booking.search-bookings', compact('title', 'col_name'));
     }
-      function store_booking(Request $request){
 
-        $customer_data=array(
-        'CustomerName'=> $request->CustomerName,
-        'CustomerAddress'=> $request->CustomerAddress,
-        'CustomerEmail'=> $request->CustomerEmail,
-        'CustomerPhone'=> $request->CustomerPhone,
-        'CustomerCity'=> $request->CustomerCity,
-        'CustomerPostCode'=> $request->CustomerPostCode,
-        'InvoiceNo'=> $request->InvoiceNo,
-        'InvoiceDate'=> $request->InvoiceDate,
-        'BookingDate'=> $request->InvoiceDate,
-        'AirlineConfirmation'=> $request->AirlineConfirmation,
-        'AgentName'=> $request->AgentName,
-        'AgentID'=> Auth::user()->id,
-        'DepartureAirport'=> $request->DepartureAirport,
-        'FlightType'=> $request->FlightType,
-        'FlightVia'=> $request->FlightVia,
-        'DepartureDate'=> $request->DepartureDate,
-        'ReturnDate'=> $request->ReturnDate,
-        'CabinClass'=> $request->CabinClass,
-        'PNRDetails'=> $request->PNRDetails,
-        'Airline'=>$request->Airline,
-        'FlightPNR'=>$request->FlightPNR,
-        'FlightGDS'=>$request->FlightGDS,
-        'PNRExpiry'=>$request->PNRExpiry,
-        'FareExpiry'=>$request->FareExpiry,
-        'BookingNote'=>$request->BookingNote,
-        'DestinationAirport'=> $request->DestinationAirport,
-        'SupplierRef'=> $request->SupplierRef,
-        'SupplierAgent'=> $request->SupplierAgent,
-        'FlightSupplier' => $request->FlightSupplier,
-        'BookingSource' => $request->BookingSource,
-        'BookingStatus'=> 'Pending');
+    function store_booking(Request $request)
+    {
 
-         if($request->ajax()){
-          $rules = array(
-            'PassengerName.*'=>'required',
-            'SeatQty.*'=>'required',
-            'SeatPrice.*'=>'required',
-            'BookingFee.*'=>'required',
-            'PassengerDOB.*'=>'required',
-            'PassengerType.*'=>'required',
+        $customer_data = array(
+            'CustomerName' => $request->CustomerName,
+            'CustomerAddress' => $request->CustomerAddress,
+            'CustomerEmail' => $request->CustomerEmail,
+            'CustomerPhone' => $request->CustomerPhone,
+            'CustomerCity' => $request->CustomerCity,
+            'CustomerPostCode' => $request->CustomerPostCode,
+            'InvoiceNo' => $request->InvoiceNo,
+            'InvoiceDate' => $request->InvoiceDate,
+            'BookingDate' => $request->InvoiceDate,
+            'AirlineConfirmation' => $request->AirlineConfirmation,
+            'AgentName' => $request->AgentName,
+            'AgentID' => Auth::user()->id,
+            'DepartureAirport' => $request->DepartureAirport,
+            'FlightType' => $request->FlightType,
+            'FlightVia' => $request->FlightVia,
+            'DepartureDate' => $request->DepartureDate,
+            'ReturnDate' => $request->ReturnDate,
+            'CabinClass' => $request->CabinClass,
+            'PNRDetails' => $request->PNRDetails,
+            'Airline' => $request->Airline,
+            'FlightPNR' => $request->FlightPNR,
+            'FlightGDS' => $request->FlightGDS,
+            'PNRExpiry' => $request->PNRExpiry,
+            'FareExpiry' => $request->FareExpiry,
+            'BookingNote' => $request->BookingNote,
+            'DestinationAirport' => $request->DestinationAirport,
+            'SupplierRef' => $request->SupplierRef,
+            'SupplierAgent' => $request->SupplierAgent,
+            'FlightSupplier' => $request->FlightSupplier,
+            'BookingSource' => $request->BookingSource,
+            'BookingStatus' => 'Pending');
 
-          );
-          $error = Validator::make($request->all(), $rules);
-          if($error->fails())
-          {
-           return response()->json([
-            'error'  => $error->errors()->all()
-           ]);
-          }
-          $customerID = DB::table('customer_details')->insertGetId($customer_data);
+        if ($request->ajax()) {
+            $rules = array(
+                'PassengerName.*' => 'required',
+                'SeatQty.*' => 'required',
+                'SeatPrice.*' => 'required',
+                'BookingFee.*' => 'required',
+                'PassengerDOB.*' => 'required',
+                'PassengerType.*' => 'required',
 
-
-          // Recipt Detail
-
+            );
+            $error = Validator::make($request->all(), $rules);
+            if ($error->fails()) {
+                return response()->json([
+                    'error' => $error->errors()->all()
+                ]);
+            }
+            $customerID = DB::table('customer_details')->insertGetId($customer_data);
 
             $_PayingBy = $request->PayingBy;
             $_ReciptMode = $request->ReciptMode;
@@ -124,24 +129,21 @@ class ClientBookingsController extends Controller
             $_Misc = $request->Misc;
 
             $ticket_cost = array(
-                'CustomerID'=> $customerID,
-                'AgentID'=> Auth::user()->id,
-                'InvoiceNo'=> $request->InvoiceNo,
-                'BasicAmount'=>$_BasicAmount,
-                'TaxAmount'=>$_TaxAmount,
-                'APCAmount'=>$_APCAmount,
-                'SAFIAmount'=>$_SAFIAmount,
-                'BankFee'=>$_BankFee,
-                'CardFee'=>$_CardFee,
-                'APCPayable'=>$_APCPayable,
-                'Misc'=>$_Misc,
-                );
+                'CustomerID' => $customerID,
+                'AgentID' => Auth::user()->id,
+                'InvoiceNo' => $request->InvoiceNo,
+                'BasicAmount' => $_BasicAmount,
+                'TaxAmount' => $_TaxAmount,
+                'APCAmount' => $_APCAmount,
+                'SAFIAmount' => $_SAFIAmount,
+                'BankFee' => $_BankFee,
+                'CardFee' => $_CardFee,
+                'APCPayable' => $_APCPayable,
+                'Misc' => $_Misc,
+            );
 
 
-
-
-
-            if($_ReciptMode === "Credit Card" || $_ReciptMode === "Debit Card"){
+            if ($_ReciptMode === "Credit Card" || $_ReciptMode === "Debit Card") {
                 $rules = array(
                     'CardHolderName' => 'required',
                     'CardNo' => 'required',
@@ -150,34 +152,33 @@ class ClientBookingsController extends Controller
                     'CVV' => 'required',
                 );
                 $error = Validator::make($request->all(), $rules);
-                if($error->fails()){
+                if ($error->fails()) {
                     return response()->json([
-                    'error'  => $error->errors()->all()
-                ]);
+                        'error' => $error->errors()->all()
+                    ]);
                 }
-                else{
-                    $recipt_data = array(
-                'CustomerID'=> $customerID,
-                'InvoiceNo'=> $request->InvoiceNo,
-                'AgentID'=> Auth::user()->id,
-                'PayingBy' => $_PayingBy,
-                'ReciptMode' => $_ReciptMode,
-                'PaymentDueDate' => $_PaymentDueDate,
-                'CardHolderName' => $_CardHolderName,
-                'CardNo' => $_CardNo,
-                'CardExpiry' => $_ExpiryMonth ."/". $_ExpiryYear,
-                'CVV' => $_CVV);
-                    DB::table('recipt_details')->insert($recipt_data);
-                }
-            }else{
 
-            $recipt_data = array(
-                'CustomerID'=> $customerID,
-                'InvoiceNo'=> $request->InvoiceNo,
-                'AgentID'=> Auth::user()->id,
-                'PayingBy' => $_PayingBy,
-                'ReciptMode' => $_ReciptMode,
-                'PaymentDueDate' => $_PaymentDueDate,
+                $recipt_data = array(
+                    'CustomerID' => $customerID,
+                    'InvoiceNo' => $request->InvoiceNo,
+                    'AgentID' => Auth::user()->id,
+                    'PayingBy' => $_PayingBy,
+                    'ReciptMode' => $_ReciptMode,
+                    'PaymentDueDate' => $_PaymentDueDate,
+                    'CardHolderName' => $_CardHolderName,
+                    'CardNo' => $_CardNo,
+                    'CardExpiry' => $_ExpiryMonth . "/" . $_ExpiryYear,
+                    'CVV' => $_CVV);
+                DB::table('recipt_details')->insert($recipt_data);
+            } else {
+
+                $recipt_data = array(
+                    'CustomerID' => $customerID,
+                    'InvoiceNo' => $request->InvoiceNo,
+                    'AgentID' => Auth::user()->id,
+                    'PayingBy' => $_PayingBy,
+                    'ReciptMode' => $_ReciptMode,
+                    'PaymentDueDate' => $_PaymentDueDate,
                 );
                 DB::table('recipt_details')->insert($recipt_data);
             }
@@ -188,29 +189,29 @@ class ClientBookingsController extends Controller
             $bookingFee = $request->BookingFee;
             $passengerDOB = $request->PassengerDOB;
             $passengerType = $request->PassengerType;
-         for($count = 0; $count < count($passengerName); $count++)
-          {
-           $data = array(
-            'CustomerID'=> $customerID,
-            'InvoiceNo'=> $request->InvoiceNo,
-            'AgentID'=> Auth::user()->id,
-            'PassengerName'=>$passengerName[$count],
-            'SeatQty'=>$seatQty[$count],
-            'SeatPrice'=>$seatPrice[$count],
-            'BookingFee'=>$bookingFee[$count],
-            'PassengerDOB'=>$passengerDOB[$count],
-            'PassengerType'=>$passengerType[$count]
-           );
-           $insert_data[] = $data;
-          }
-         DB::table('customer_booking_details')->insert($insert_data);
-         DB::table('ticket_cost')->insert($ticket_cost);
-        return redirect()->route('booking-flight')->with('success','Data has been saved Successfully!');
+            for ($count = 0, $countMax = count($passengerName); $count < $countMax; $count++) {
+                $data = array(
+                    'CustomerID' => $customerID,
+                    'InvoiceNo' => $request->InvoiceNo,
+                    'AgentID' => Auth::user()->id,
+                    'PassengerName' => $passengerName[$count],
+                    'SeatQty' => $seatQty[$count],
+                    'SeatPrice' => $seatPrice[$count],
+                    'BookingFee' => $bookingFee[$count],
+                    'PassengerDOB' => $passengerDOB[$count],
+                    'PassengerType' => $passengerType[$count]
+                );
+                $insert_data[] = $data;
+            }
+            DB::table('customer_booking_details')->insert($insert_data);
+            DB::table('ticket_cost')->insert($ticket_cost);
+            return redirect()->route('booking-flight')->with('success', 'Data has been saved Successfully!');
 
         }
     }
 
-      function search(Request $request){
+    function search(Request $request)
+    {
         $searchValue = $request->input('searchby');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
@@ -218,5 +219,6 @@ class ClientBookingsController extends Controller
         $data = DB::table('customer_details')->whereBetween('CreatedAt', [$startDate, $endDate])->get();
         return ['data' => $data];
     }
+
 
 }
