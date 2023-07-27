@@ -40,11 +40,9 @@
                                         @endphp
                                         <h4 class="mb-0">{{ $totalClients }}</h4>
                                     </div>
-
                                     <div class="col-4">
                                         <p class="text-muted text-truncate mb-2">Total Bookings</p>
                                         <h4 class="mb-0">
-
                                             {{number_format($total_price[0]->total_price,1)}}
                                         </h4>
                                     </div>
@@ -95,7 +93,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="formrow-password-input" class="form-label">Password</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
@@ -106,7 +104,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="formrow-confirm-password-input" class="form-label">Confirm
                                         Password</label>
@@ -115,6 +113,21 @@
                                            id="formrow-confirm-password-input" name="password_confirmation"
                                            placeholder="Confirm Your Password">
                                     @error('password_confirmation')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="formrow-confirm-password-input" class="form-label">Role</label>
+                                    <select name="Role" id="Role" class="form-select">
+                                        <option value="Agent" {{$agent_profile[0]->Role === 'Agent' ? 'selected' : ''}}>Agent</option>
+                                        <option value="Admin" {{$agent_profile[0]->Role === 'Admin' ? 'selected' : ''}}>Admin</option>
+                                        <option value="Super Admin" {{$agent_profile[0]->Role === 'Super Admin' ? 'selected' : ''}}>Super Admin</option>
+
+                                    </select>
+
+                                    @error('Role')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

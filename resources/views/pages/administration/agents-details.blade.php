@@ -54,28 +54,40 @@
                                         <td>{{$value->email}}</td>
                                         <td>{{$value->Role}}</td>
                                         <td><span
-                                                class="fs-6 p-2 badge bg-{{$value->IsActive == 0 ? 'danger' : 'success'}}">{{$value->IsActive == 0 ? 'Blocked' : 'Active'}}</span>
+                                                class="fs-6 p-2 badge bg-{{$value->is_blocked == 0 ? 'danger' : 'success'}}">{{$value->is_blocked == 0 ? 'Blocked' : 'Active'}}</span>
                                         </td>
                                         <td>{{date('d-m-Y H:m:s a',strtotime($value->created_at))}}</td>
 
                                         <td class="text-center">
                                             <ul class="list-inline font-size-20 contact-links mb-0">
-                                                <li class="list-inline-item px-2">
+                                                <li class="list-inline-item">
                                                     <a href="{{route('admin.agent-profile',$value->id)}}"
                                                        class="btn btn-success waves-effect waves-light  text-white p-1 font-size-18"><i
-                                                            class="bx bx-cog"></i></a>
+                                                            class="bx bx-cog bx-spin-hover"></i></a>
                                                 </li>
-                                                <li class="list-inline-item px-2">
+                                                <li class="list-inline-item ">
+                                                    <form class="block-agent-form">
+                                                        @csrf
+                                                        <input type="hidden" name="agent_id" value="{{ $value->id }}">
+                                                        <input type="hidden" name="IsActive"
+                                                               value="{{ $value->is_blocked }}">
+                                                        <button type="submit"
+                                                                class="btn btn-warning waves-effect waves-light p-1 font-size-18 block-agent">
+                                                            <i class="bx bx-block"></i>
+                                                        </button>
+                                                    </form>
+                                                </li>
 
 
-                                                        <form class="block-agent-form">
-                                                            @csrf
-                                                            <input type="hidden" name="agent_id" value="{{ $value->id }}">
-                                                            <input type="hidden" name="IsActive" value="{{ $value->IsActive }}">
-                                                            <button type="submit" class="btn btn-danger waves-effect waves-light p-1 font-size-18 block-agent">
-                                                                <i class="bx bx-block"></i>
-                                                            </button>
-                                                        </form>
+                                                <li class="list-inline-item">
+                                                    <form class="delete-agent">
+                                                        @csrf
+                                                        <input type="hidden" name="del_agent_id" value="{{ $value->id }}">
+                                                        <button type="submit"
+                                                                class="btn btn-danger waves-effect waves-light p-1 font-size-18 block-agent">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </form>
 
 
                                                 </li>
@@ -126,7 +138,53 @@
                                 {
                                     agent_id: agentId,
                                     isActive: isActive
-                            },
+                                },
+                            dataType: 'json',
+                            success: function (data) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    icon: 'success',
+                                    html: data.message,
+                                    willClose: () => {
+                                        location.reload();
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            });
+        });
+
+
+
+        $(document).ready(function () {
+            $('.delete-agent').submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var agentId = form.find('input[name="del_agent_id"]').val();
+
+                Swal.fire({
+                    title: 'Do you want to delete this agent?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    icon: 'error',
+                    confirmButtonText: 'Delete',
+                    denyButtonText: `Cancel`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $.ajax({
+                            url: "{{ route('admin.delete-agent') }}",
+                            method: "POST",
+                            data:
+                                {
+                                    del_agent_id: agentId,
+                                },
                             dataType: 'json',
                             success: function (data) {
                                 Swal.fire({
@@ -144,6 +202,5 @@
             });
         });
     </script>
-
 
 @endsection

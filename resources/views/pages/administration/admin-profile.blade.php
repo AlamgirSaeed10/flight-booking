@@ -34,11 +34,11 @@
                                     </div>
                                     <div class="col-4">
                                         <p class="text-muted text-truncate mb-2">Total Clients</p>
-                                        <h4 class="mb-0">{{number_format($clients[0]->TotalSeatPrice,1)}}</h4>
+                                        <h4 class="mb-0">{{number_format(isset($clients[0]->TotalSeatPrice),1)}}</h4>
                                     </div>
                                     <div class="col-4">
                                         <p class="text-muted text-truncate mb-2">Total Clients</p>
-                                        <h4 class="mb-0">{{number_format($clients[0]->TotalFareExpiry,1)}}</h4>
+                                        <h4 class="mb-0">{{number_format(isset($clients[0]->TotalFareExpiry),1)}}</h4>
                                     </div>
                                 </div>
                             </div>

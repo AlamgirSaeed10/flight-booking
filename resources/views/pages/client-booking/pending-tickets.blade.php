@@ -47,18 +47,18 @@
                   @if(count($booking_data) > 0 && count($payment_data) > 0)
 
                       @foreach($booking_data as $key =>$value)
-                        <tr class="text-center">
-                            <td>{{++$i}}</td>
-                            <td>{{date('d-m-Y',strtotime($value->InvoiceDate))}}</td>
-                            <td>{{date('d-m-Y',strtotime($value->DepartureDate))}}</td>
-                            <td><a href="{{url('view-tickets')}}/{{$value->InvoiceNo}}"><strong>{{$value->InvoiceNo}}</strong></a></td>
+                        <tr>
+                            <td class="text-center fw-bolder">{{++$i}}</td>
+                            <td class="text-center">{{date('d-m-Y',strtotime($value->InvoiceDate))}}</td>
+                            <td class="text-center">{{date('d-m-Y',strtotime($value->DepartureDate))}}</td>
+                            <td class="text-center"><a href="{{url('view-tickets')}}/{{$value->InvoiceNo}}"><strong>{{$value->InvoiceNo}}</strong></a></td>
                             <td>{{$value->SupplierRef}}</td>
                             <td>{{$value->CustomerName}}</td>
-                            <td>{{$payment_data[$key]->CustomerID ==$value->CustomerID ? $payment_data[$key]->BankAmount :'0'}}</td>
-                            <td>{{$payment_data[$key]->CustomerID ==$value->CustomerID ? $payment_data[$key]->CardAmount :'0'}}</td>
-                            <td>{{$payment_data[$key]->CustomerID ==$value->CustomerID ? $payment_data[$key]->CashAmount :'0'}}</td>
-                            <td>{{$payment_data[$key]->CustomerID ==$value->CustomerID ? $payment_data[$key]->OtherAmount :'0'}}</td>
-                            <td>
+                            <td class="text-center fw-bolder text-muted">{{$payment_data[$key]->BankAmount }}</td>
+                            <td class="text-center fw-bolder text-muted">{{$payment_data[$key]->CardAmount }}</td>
+                            <td class="text-center fw-bolder text-muted">{{$payment_data[$key]->CashAmount }}</td>
+                            <td class="text-center fw-bolder text-muted">{{$payment_data[$key]->OtherAmount}}</td>
+                            <td class="text-center fw-bolder text-muted fs-5">
                            <?php
                             $ticket_cost = DB::table('ticket_cost')->where('customerID', '=', $value->CustomerID)->where('AgentID',Auth::user()->id)->first();
                             $amount_recieved = DB::table('recipt_details')->where('customerID', '=', $value->CustomerID)->where('AgentID',Auth::user()->id)->first();
@@ -84,12 +84,12 @@
             </tbody>
             <tfoot class="bg-light">
     <tr>
-        <td colspan="6" class="text-right font-size-18">Total  :</td>
-        <td colspan="1" class="text-center font-size-18">{{$bank}}</td>
-        <td colspan="1" class="text-center font-size-18">{{$card}}</td>
-        <td colspan="1" class="text-center font-size-18">{{$cash}}</td>
-        <td colspan="1" class="text-center font-size-18">{{$other}}</td>
-        <td colspan="1" class="text-center font-size-18">{{$grand}}</td>
+        <td colspan="6" class="text-right  fw-bolder text-muted fs-5">Total  :</td>
+        <td colspan="1" class="text-center fw-bolder text-muted fs-5">{{$bank}}</td>
+        <td colspan="1" class="text-center fw-bolder text-muted fs-5">{{$card}}</td>
+        <td colspan="1" class="text-center fw-bolder text-muted fs-5">{{$cash}}</td>
+        <td colspan="1" class="text-center fw-bolder text-muted fs-5">{{$other}}</td>
+        <td colspan="1" class="text-center fw-bolder text-muted fs-5">{{$grand}}</td>
     </tr>
 </tfoot>
         </table>

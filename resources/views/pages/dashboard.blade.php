@@ -9,7 +9,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-12 col-lg-12">
-
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
   <div class="row">
       <div class="col-xl-3 col-lg-3 col-sm-12 col-md-12">

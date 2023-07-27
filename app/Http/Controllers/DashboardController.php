@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use Couchbase\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -27,14 +28,14 @@ class DashboardController extends Controller
         return view('auth.register');
     }
 
-    function agent_registration(Request $request)
+    public function agent_registration(Request $request)
     {
-
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'Role' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adding image validation rule
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -43,14 +44,19 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $data = array(
+        $imageName = auth()->id() . '-' . $request->name . '.' . $request->file('image')->getClientOriginalExtension();
+
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'Role' => $request->Role,
             'password' => Hash::make($request->password),
-        );
+            'image' => $imageName,
+        ];
 
-        $agent = DB::table('users')->insert($data);
+//        $request->file('image')->storeAs('assets/images/users', $imageName);
+        $request->image->move(public_path('assets/images/users/'), $imageName);
+        DB::table('users')->insert($data);
 
         return redirect()->back()->with('success', 'Agent has been registered successfully!');
     }
@@ -85,6 +91,7 @@ class DashboardController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'password' => 'required|string|min:8|confirmed',
+            'Role'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -96,7 +103,8 @@ class DashboardController extends Controller
         $data = [
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
+            'Role' => $request->Role,
         ];
 
         DB::table('users')->where('id', auth()->id())->where('email', $data['email'])->update($data);
@@ -128,10 +136,10 @@ class DashboardController extends Controller
             $agent = DB::table('users')->where('id', $agentId)->first();
 
             if ($agent) {
-                if ($agent->IsActive == 0) {
-                    DB::table('users')->where('id', $agentId)->update(['IsActive' => 1]);
-                } else if ($agent->IsActive == 1) {
-                    DB::table('users')->where('id', $agentId)->update(['IsActive' => 0]);
+                if ($agent->is_blocked == 0) {
+                    DB::table('users')->where('id', $agentId)->update(['is_blocked' => 1]);
+                } else if ($agent->is_blocked == 1) {
+                    DB::table('users')->where('id', $agentId)->update(['is_blocked' => 0]);
                 }
                 return response()->json(['message' => 'Agent status updated successfully.']);
             } else {
@@ -168,6 +176,28 @@ class DashboardController extends Controller
             DB::table('users')->where('id', $user_id)->where('email', $data['email'])->update($data);
             return redirect()->back()->with('success', 'Password updated successfully...!');
         }
+
+
+    }
+
+    public function delete_agent(Request $request)
+    {
+
+        $agentId = $request->del_agent_id;
+
+        if ($request->ajax()) {
+            $agent = DB::table('users')->where('id', $agentId)->first();
+
+            if ($agent) {
+                DB::table('users')->where('id',$agentId)->delete();
+                return response()->json(['message' => 'Agent status updated successfully.']);
+            }
+
+            return response()->json(['message' => 'Agent not found.'], 404);
+        }
+
+
+
 
 
     }
