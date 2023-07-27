@@ -206,9 +206,9 @@
                     <p class="float-end">Customer Name and Signature</p>
                 </div>
             </div>
-            <p style="page-break-after: always;">&nbsp;<br></p>
+            <p style="margin-bottom: 5%">&nbsp;<br></p>
             <br><br>
-            <div class="container">
+            <div class="container mt-4">
 
                 <h4 class="text-start">Booking Terms &amp; Conditions</h4>
                 <p>Please read these carefully as the person making this booking (either for him selves or for any other
