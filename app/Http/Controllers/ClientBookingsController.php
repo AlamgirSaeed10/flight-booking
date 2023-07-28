@@ -221,4 +221,5 @@ class ClientBookingsController extends Controller
     }
 
 
+
 }

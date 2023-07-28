@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DuplicateTicketController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -24,10 +25,12 @@ Route::get('/', function () {
 });
 
 
+Route::group(['middleware'=>['auth','isUser']],function (){
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 // ===================================
 // Home Controller
 // ===================================
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/agent-form', [DashboardController::class, 'agent_form'])->name('agent-form');
     Route::post('/agent-registration', [DashboardController::class, 'agent_registration'])->name('agent-registration');
     Route::get('/agents-details', [DashboardController::class, 'agents_details'])->name('agents-details');
@@ -43,6 +46,13 @@ Route::get('/', function () {
     Route::get('/search-data', [ClientBookingsController::class, 'search_bookings'])->name('search-data');
     Route::post('/booking', [ClientBookingsController::class, 'store_booking'])->name('store_booking');
     Route::post('/search', [ClientBookingsController::class, 'search'])->name('search');
+
+
+    Route::post('duplicate_invoice', [DuplicateTicketController::class, 'duplicate_ticket'])->name('duplicate-invoice');
+    Route::get('duplicate-tickets', [DuplicateTicketController::class, 'view_duplicate'])->name('duplicate-ticket');
+    Route::get('delete_duplicate/{InvoiceNo}', [DuplicateTicketController::class, 'delete_duplicate'])->name('delete_duplicate');
+    Route::get('/generate-pdf/{InvoiceID}', [DuplicateTicketController::class, 'generatePDF'])->name('generate-pdf');
+
 
 // ===================================
 // Pending Controller

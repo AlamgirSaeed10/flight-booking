@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-use Couchbase\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -91,7 +89,7 @@ class DashboardController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'password' => 'required|string|min:8|confirmed',
-            'Role'=>'required',
+            'Role' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -135,15 +133,18 @@ class DashboardController extends Controller
         if ($request->ajax()) {
             $agent = DB::table('users')->where('id', $agentId)->first();
 
-            if ($agent) {
-                if ($agent->is_blocked == 0) {
-                    DB::table('users')->where('id', $agentId)->update(['is_blocked' => 1]);
-                } else if ($agent->is_blocked == 1) {
+            if ($agent->Role === "Super Admin") {
+                return response()->json(['message' => 'Super admin can not be banned...!', 'info' => 'warning']);
+
+            } else {
+                if ($agent->is_blocked == 1) {
                     DB::table('users')->where('id', $agentId)->update(['is_blocked' => 0]);
+                    return response()->json(['message' => 'Agent has been unblocked successfully.']);
+                } else if ($agent->is_blocked == 0) {
+                    DB::table('users')->where('id', $agentId)->update(['is_blocked' => 1]);
+                    return response()->json(['message' => 'Agent has been blocked successfully.']);
                 }
                 return response()->json(['message' => 'Agent status updated successfully.']);
-            } else {
-                return response()->json(['message' => 'Agent not found.'], 404);
             }
         }
     }
@@ -176,8 +177,6 @@ class DashboardController extends Controller
             DB::table('users')->where('id', $user_id)->where('email', $data['email'])->update($data);
             return redirect()->back()->with('success', 'Password updated successfully...!');
         }
-
-
     }
 
     public function delete_agent(Request $request)
@@ -189,15 +188,11 @@ class DashboardController extends Controller
             $agent = DB::table('users')->where('id', $agentId)->first();
 
             if ($agent) {
-                DB::table('users')->where('id',$agentId)->delete();
-                return response()->json(['message' => 'Agent status updated successfully.']);
+                DB::table('users')->where('id', $agentId)->delete();
+                return response()->json(['message' => 'Agent deleted successfully.']);
             }
-
             return response()->json(['message' => 'Agent not found.'], 404);
         }
-
-
-
 
 
     }

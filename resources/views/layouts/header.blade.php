@@ -122,6 +122,7 @@
                                 @if(Auth::user()->Role === "Super Admin" || Auth::user()->Role === "Admin" )
                                     <li><a href="javascript: void(0);" class="has-arrow waves-effect"><span key="t-dashboards">Agent Setting</span></a>
                                         <ul class="sub-menu" aria-expanded="false" style="">
+                                            <li><a href="{{route('duplicate-ticket')}}">Duplicate Ticket</a></li>
                                             <li><a href="{{route('agent-form')}}">Add Agent</a></li>
                                             <li><a href="{{route('agents-details')}}">View Agent</a></li>
                                         </ul>

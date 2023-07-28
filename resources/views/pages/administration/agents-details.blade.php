@@ -11,7 +11,6 @@
                 </div>
             </div>
         </div>
-        <!-- end page title -->
 
         <div class="row">
             <div class="col-lg-12">
@@ -54,7 +53,7 @@
                                         <td>{{$value->email}}</td>
                                         <td>{{$value->Role}}</td>
                                         <td><span
-                                                class="fs-6 p-2 badge bg-{{$value->is_blocked == 0 ? 'danger' : 'success'}}">{{$value->is_blocked == 0 ? 'Blocked' : 'Active'}}</span>
+                                                class="fs-6 p-2 badge bg-{{$value->is_blocked == 1 ? 'danger' : 'success'}}">{{$value->is_blocked == 1 ? 'Blocked' : 'Active'}}</span>
                                         </td>
                                         <td>{{date('d-m-Y H:m:s a',strtotime($value->created_at))}}</td>
 
@@ -82,7 +81,8 @@
                                                 <li class="list-inline-item">
                                                     <form class="delete-agent">
                                                         @csrf
-                                                        <input type="hidden" name="del_agent_id" value="{{ $value->id }}">
+                                                        <input type="hidden" name="del_agent_id"
+                                                               value="{{ $value->id }}">
                                                         <button type="submit"
                                                                 class="btn btn-danger waves-effect waves-light p-1 font-size-18 block-agent">
                                                             <i class="bx bx-trash"></i>
@@ -155,7 +155,6 @@
                 })
             });
         });
-
 
 
         $(document).ready(function () {

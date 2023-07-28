@@ -3,7 +3,6 @@
     <head>
 
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css"
               rel="stylesheet"/>
@@ -13,30 +12,19 @@
         <script
             src="https://cdn.tiny.cloud/1/8ocium3ymud15bb8sswaevn9jxk0jo821fjmyfwj7yml17bw/tinymce/6/tinymce.min.js"></script>
         <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
-
-
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
-        <!-- "x-editable" CSS and JS -->
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
             rel="stylesheet">
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-
-        <!-- "datepicker" CSS and JS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
               rel="stylesheet">
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
-
     </head>
 
-
     <div class="container-fluid">
-
-
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -602,7 +590,13 @@
                             </button>
 
 
-                            <button class="btn btn-sm btn-info DuplicateFile" data-bkg-id="1713">Create Duplicate
+                            <form id="duplicate" method="post" style="display: none">
+                                <input type="hidden" name="duplicate_invoice_id" id="duplicate_invoice_id"
+                                       value="{{$customer_details[0]->InvoiceNo}}">
+
+
+                            </form>
+                            <button id="duplicate-ticket" class="btn btn-sm btn-info DuplicateFile">Create Duplicate
                                 File
                             </button>
                             <button type="button" class="btn btn-sm btn-info m-r-10" data-bs-toggle="modal"
@@ -616,7 +610,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade bs-example-modal-xl" tabindex="-1" aria-labelledby="myExtraLargeModalLabel"
              aria-hidden="true" style="display: none;">
             <div class="modal-dialog modal-xl">
@@ -723,9 +716,6 @@
                 </div>
             </div>
         </div>
-
-
-
         <div class="modal fade" id="payment_req" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -743,13 +733,15 @@
                                     <div class="form-group m-b-0">
                                         <label class="form-label">Request <span class="text-danger">*</span></label>
                                         <div class="controls">
-                                            <select name="PaymentType" id="payment_type" required="" class="form-control parsley-success" data-parsley-id="77">
+                                            <select name="PaymentType" id="payment_type" required=""
+                                                    class="form-control parsley-success" data-parsley-id="77">
                                                 <option value="">Select Task Request</option>
                                                 <option value="Bank Payment">Bank Payment</option>
                                                 <option value="Card Payment">Card Payment</option>
                                                 <option value="Cash Payment">Cash Payment</option>
                                                 <option value="Other Payment">Other Payment</option>
-                                            </select><ul class="parsley-errors-list" id="parsley-id-77"></ul>
+                                            </select>
+                                            <ul class="parsley-errors-list" id="parsley-id-77"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -757,13 +749,16 @@
                                     <div class="form-group m-b-0" id="bank_section" style="display: none;">
                                         <label class="form-label">Bank <span class="text-danger">*</span></label>
                                         <div class="controls">
-                                            <select name="BankName" id="BankName" class="form-control" data-parsley-id="79">
+                                            <select name="BankName" id="BankName" class="form-control"
+                                                    data-parsley-id="79">
                                                 <option value="">Select Payment Bank</option>
                                                 <option value="ANNA Bank">ANNA Bank</option>
                                                 <option value="Card One">Card One</option>
                                                 <option value="Lloyd Bank">Lloyd Bank</option>
-                                                <option value="Revolut Bank ">Revolut Bank </option>
-                                                <option value="Rothak international - Alfalah Bank">Rothak international - Alfalah Bank</option>
+                                                <option value="Revolut Bank ">Revolut Bank</option>
+                                                <option value="Rothak international - Alfalah Bank">Rothak international
+                                                    - Alfalah Bank
+                                                </option>
                                                 <option value="UK Office Cash">UK Office Cash</option>
                                             </select>
                                         </div>
@@ -773,9 +768,11 @@
                             <div class="row mt-2">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Payment Date <span class="text-danger">*</span></label>
+                                        <label class="form-label">Payment Date <span
+                                                class="text-danger">*</span></label>
                                         <div class="controls">
-                                            <input type="date" name="PaymentDate" id="PaymentDate" class="date form-control">
+                                            <input type="date" name="PaymentDate" id="PaymentDate"
+                                                   class="date form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -783,7 +780,8 @@
                                     <div class="form-group">
                                         <label class="form-label">Amount <span class="text-danger">*</span></label>
                                         <div class="controls">
-                                            <input type="number" step="0.01" name="RequestAmount" class="form-control" required="">
+                                            <input type="number" step="0.01" name="RequestAmount" class="form-control"
+                                                   required="">
                                         </div>
                                     </div>
                                 </div>
@@ -793,7 +791,8 @@
                                     <div class="form-group">
                                         <label class="form-label">Request Note</label>
                                         <div class="controls">
-                                            <textarea name="RequestNote" class="form-control" rows="3"></textarea>
+                                            <input name="RequestNote" class="form-control"
+                                                   placeholder="Request note...">
                                         </div>
                                     </div>
                                 </div>
@@ -802,12 +801,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success"  id="paymentreqsubmit" form="payment_request">Submit</button>
+                        <button type="submit" class="btn btn-success" id="paymentreqsubmit" form="payment_request">
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
         <script>
             $(document).on('change', '#payment_type', function () {
                 var type = $(this).val();
@@ -850,8 +850,6 @@
                     }
                 });
             });
-
-
             document.getElementById("cancel_pending").addEventListener("click", function () {
                 var form = $('#cncl_pending').serialize();
                 Swal.fire({
@@ -890,14 +888,12 @@
                 branding: false,
                 readonly: true
             });
-
             $.fn.editable.defaults.mode = 'inline';
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}'
                 }
             });
-
             $('.update_record').editable({
                 url: "{{ route('update') }}",
                 params: function (params) {
@@ -920,12 +916,51 @@
                     console.log('Error occurred during update.');
                 }
             });
-            // Initialize the "datepicker" plugin
             $('.update_record[data-type="text"]').each(function () {
                 $(this).editable('option', 'datepicker', {
                     format: 'yyyy-mm-dd',
                     autoclose: true
                 });
             });
+
+
+            document.getElementById("duplicate-ticket").addEventListener("click", function () {
+                var duplicate_invoice_id = $('#duplicate').serialize();
+
+                Swal.fire({
+                    title: 'Are you sure you want to duplicate Invoice?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    icon: 'info',
+                    confirmButtonText: 'Create',
+                    denyButtonText: `Cancel`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                        });
+                        $.ajax({
+                            url: "{{ route('duplicate-invoice') }}",
+                            method: "POST",
+                            data: duplicate_invoice_id,
+                            dataType: 'json',
+                            success: function (data) {
+                                Swal.fire({
+                                    title: 'Success',
+                                    icon: 'success',
+                                    html: data.message,
+                                    willClose: () => {
+                                        location.reload();
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            });
+
+
         </script>
 @endsection
