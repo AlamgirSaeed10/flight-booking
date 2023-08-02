@@ -79,7 +79,12 @@ class DashboardController extends Controller
         $admin_data = DB::table('users')->where('id', auth()->id())->get();
         $invoice = DB::table('recipt_details')->where('AgentID', auth()->id())->get();
         $total = DB::table('customer_details')->where('BookingStatus', 'Pending')->get();
-        $clients = DB::select("SELECT cd.AgentID, SUM(CAST(cb.SeatPrice AS DECIMAL(10, 2))) AS TotalSeatPrice, SUM(CAST(cd.FareExpiry AS DECIMAL(10, 2))) AS TotalFareExpiry FROM customer_booking_details cb JOIN customer_details cd ON cb.AgentID = cd.AgentID GROUP BY cd.AgentID");
+
+        $clients = DB::select("SELECT cd.AgentID,
+        SUM(CAST(cb.SeatPrice AS DECIMAL(10, 2))) AS TotalSeatPrice,
+        SUM(CAST(cd.FareExpiry AS DECIMAL(10, 2))) AS TotalFareExpiry
+        FROM customer_booking_details cb JOIN customer_details cd ON cb.AgentID = cd.AgentID GROUP BY cd.AgentID");
+
         return view('pages.administration.admin-profile', compact('admin_data', 'invoice', 'total', 'clients'));
     }
 
