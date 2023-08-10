@@ -7,7 +7,7 @@
                     <div class="card-header bg-dark border-primary">
                         <h5 class="text-white mb-0">{{ __('Login') }}</h5></div>
                     @if (session('error'))
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger m-4">
                             {{ session('error') }}
                         </div>
                     @endif

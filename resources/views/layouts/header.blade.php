@@ -55,8 +55,8 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/avatar-3.jpg')}}"
-                                    alt="Header Avatar">
+                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/'.\Illuminate\Support\Facades\Auth::user()->image)}}"
+                                    alt="Header Avatar {{Auth::user()->name}}">
                                     {{Auth::user()->name}}
 
                                 <span class="d-none d-xl-inline-block ms-1" key="t-henry"> </span>
@@ -65,7 +65,7 @@
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
                                 <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
-                                <a class="dropdown-item d-block" href="#"><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
+{{--                                <a class="dropdown-item d-block" href="#"><i class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>--}}
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
@@ -88,18 +88,20 @@
 
                             <li>
                                 <a href="{{url('dashboard')}}" class="waves-effect">
-                                    <i class="bx bx-home-circle"></i><span key="t-dashboards">Dashboard</span>
+                                    <i class="bx bxs-dashboard"></i><span key="t-dashboards">Dashboard</span>
                                 </a>
                             </li>
+                            @if(Auth::user()->Role === "Super Admin")
                             <li>
                                 <a href="{{url('pending-tasks')}}" class="waves-effect">
-                                    <i class="bx bx-home-circle"></i><span key="t-dashboards">Pending Tasks</span>
+                                    <i class="mdi mdi-format-list-checks"></i><span key="t-dashboards">Pending Tasks</span>
                                 </a>
                             </li>
+                            @endif
 
                              <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="bx bx-home-circle"></i><span key="t-dashboards">Client Bookings</span>
+                                    <i class="bx bxs-book"></i><span key="t-dashboards">Client Bookings</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{url('booking-flight')}}" key="t-default">Add</a></li>
@@ -115,14 +117,15 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="bx bx-home-circle"></i><span key="t-dashboards">Administration</span>
+                                    <i class="mdi mdi-shield-account-outline"></i><span key="t-dashboards">Administration</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{url('reports')}}" key="t-blog">Reports</a></li>
-                                @if(Auth::user()->Role === "Super Admin" || Auth::user()->Role === "Admin" )
+
                                     <li><a href="javascript: void(0);" class="has-arrow waves-effect"><span key="t-dashboards">Agent Setting</span></a>
                                         <ul class="sub-menu" aria-expanded="false" style="">
                                             <li><a href="{{route('duplicate-ticket')}}">Duplicate Ticket</a></li>
+                                            @if(Auth::user()->Role === "Super Admin")
                                             <li><a href="{{route('agent-form')}}">Add Agent</a></li>
                                             <li><a href="{{route('agents-details')}}">View Agent</a></li>
                                         </ul>

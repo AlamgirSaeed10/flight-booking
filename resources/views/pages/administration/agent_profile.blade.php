@@ -118,6 +118,7 @@
                                 </div>
                             </div>
 
+                          @if($agent_profile[0]->Role !== 'Super Admin')
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="formrow-confirm-password-input" class="form-label">Role</label>
@@ -134,6 +135,7 @@
                                 </div>
                             </div>
 
+@endif
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{route('agents-details')}}" class="btn btn-danger">Cancel</a>
