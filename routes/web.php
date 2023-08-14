@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DuplicateTicketController;
+use App\Http\Controllers\ProfileManagementController;
 use App\Http\Controllers\SuperAdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,38 +11,21 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PendingController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('auth.login');
 });
-//===============================
-//      SUPER ADMIN
-//===============================
+
 Auth::routes();
 
-//===============================
+
 Route::group(['middleware' => ['auth', 'isUser']], function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 Route::get('/super-admin', [SuperAdminController::class, 'super_admin'])->name('super-admin.dashboard');
 
 Route::get('/single-agent/{AgentID}', [SuperAdminController::class, 'single_agent'])->name('super-admin.agent-detail');
-//Route::get('/super-admin', [SuperAdminController::class, 'super_admin'])->name('super-admin.dashboard');
 
-
-// ===================================
-// Home Controller
-// ===================================
 Route::get('/agent-form', [DashboardController::class, 'agent_form'])->name('agent-form');
 Route::post('/agent-registration', [DashboardController::class, 'agent_registration'])->name('agent-registration');
 Route::get('/agents-details', [DashboardController::class, 'agents_details'])->name('agents-details');
@@ -56,7 +40,6 @@ Route::get('/cancelled-booking', [ClientBookingsController::class, 'cancelled_bo
 Route::get('/hold-bookings', [ClientBookingsController::class, 'hold_bookings'])->name('hold-bookings');
 Route::get('/search-data', [ClientBookingsController::class, 'search_bookings'])->name('search-data');
 Route::post('/booking', [ClientBookingsController::class, 'store_booking'])->name('store_booking');
-
 
 
 Route::post('duplicate_invoice', [DuplicateTicketController::class, 'duplicate_ticket'])->name('duplicate-invoice');
@@ -81,24 +64,23 @@ Route::post('view-ticket', [HomeController::class, 'update'])->name('update');
 Route::get('/edit-tickets/{InvoiceNo}', [PendingController::class, 'edit_tickets'])->name('edit-tickets');
 Route::post('/update-tickets/{InvoiceNo}', [PendingController::class, 'update_tickets'])->name('update-tickets');
 
-Route::get('profile', [DashboardController::class, 'admin_profile'])->name('admin.profile');
-Route::post('update-profile', [DashboardController::class, 'update_profile'])->name('admin.update-profile');
 
-Route::get('agent-profile/{AgentID}', [DashboardController::class, 'view_agent_profile'])->name('admin.agent-profile');
-Route::post('block-agent', [DashboardController::class, 'block_agent'])->name('admin.block-agent');
-Route::post('update-agent-profile', [DashboardController::class, 'update_agent_profile'])->name('admin.update-agent-profile');
-
-
-Route::post('delete-agent', [DashboardController::class, 'delete_agent'])->name('admin.delete-agent');
+Route::get('profile', [ProfileManagementController::class, 'admin_profile'])->name('admin.profile');
+Route::post('update-profile', [ProfileManagementController::class, 'update_profile'])->name('admin.update-profile');
+Route::get('agent-profile/{AgentID}', [ProfileManagementController::class, 'view_agent_profile'])->name('admin.agent-profile');
+Route::post('block-agent', [ProfileManagementController::class, 'block_agent'])->name('admin.block-agent');
+Route::post('update-agent-profile', [ProfileManagementController::class, 'update_agent_profile'])->name('admin.update-agent-profile');
+Route::post('delete-agent', [ProfileManagementController::class, 'delete_agent'])->name('admin.delete-agent');
 
 
 // ===================================
 // Reports Controller
 // ===================================
 Route::get('/reports', [ReportController::class, 'reports'])->name('reports');
+Route::post('/view-reports', [ReportController::class, 'supplierReport'])->name('supplierReport');
+
 Route::get('/data', [ReportController::class, 'getReportData'])->name('data');
 
 
-
-Route::post('/search', [ClientBookingsController::class, 'searchBookingsByDate'])->name('searchBookingsByDate');
-Route::post('/search-value', [ClientBookingsController::class, 'searchBookingsByValue'])->name('searchBookingsByValue');
+Route::post('/search', [ReportController::class, 'searchBookingsByDate'])->name('searchBookingsByDate');
+Route::post('/search-value', [ReportController::class, 'searchBookingsByValue'])->name('searchBookingsByValue');

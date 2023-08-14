@@ -3,42 +3,86 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <img src="{{asset('assets/images/users/avatar-1.jpg')}}" alt=""
-                                         class="avatar-md rounded-circle img-thumbnail">
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="card bg-primary bg-soft">
+                        <div>
+                            <div class="row">
+
+                                <div class="col-3 mt-2 p-4">
+                                    <div class="flex-shrink-0 me-3">
+                                        <img src="{{asset('assets/images/users/'.$users[0]->image)}}" alt=""
+                                             class="avatar-md rounded-circle img-thumbnail">
+                                    </div>
                                 </div>
-                                <div class="flex-grow-1 align-self-center">
-                                    <div class="text-muted">
-                                        <p class="mb-2 fw-bold">Agent Name</p>
-                                        <h5 class="mb-1">{{$admin_data[0]->name}}</h5>
-                                        <p class="mb-0">{{$admin_data[0]->Role}}</p>
+                                <div class="col-8">
+                                    <div class="text-primary p-4 text-primary">
+                                        <h5 class="text-primary">Agent Detail !</h5>
+                                        <span>{{$users[0]->name}}</span> <br>
+                                        <span>{{$users[0]->email}}</span><br>
+                                        <span>{{$users[0]->Role}} </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 align-self-center">
-                            <div class="text-lg-center mt-4 mt-lg-0">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <p class="text-muted text-truncate mb-2">Total Bookings</p>
-                                        <h4 class="mb-0">{{count($invoice)}}</h4>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar-xs me-3">
+                                        <span
+                                            class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                            <i class="bx bx-copy-alt"></i>
+                                        </span>
+                                        </div>
+                                        <h5 class="font-size-14 mb-0">Total Orders</h5>
                                     </div>
-                                    <div class="col-2">
-                                        <p class="text-muted text-truncate mb-2">Total Pending</p>
-                                        <h4 class="mb-0">{{count($total)}}</h4>
+                                    <div class="text-muted mt-4">
+                                        <h4>{{count($cd_total)}} <i class="mdi mdi-chevron-up ms-1 text-success"></i>
+                                        </h4>
                                     </div>
-                                    <div class="col-4">
-                                        <p class="text-muted text-truncate mb-2">Total Clients</p>
-                                        <h4 class="mb-0">{{number_format(isset($clients[0]->TotalSeatPrice),1)}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar-xs me-3">
+                                        <span
+                                            class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                            <i class="bx bx-archive-in"></i>
+                                        </span>
+                                        </div>
+                                        <h5 class="font-size-14 mb-0">Revenue</h5>
                                     </div>
-                                    <div class="col-4">
-                                        <p class="text-muted text-truncate mb-2">Total Clients</p>
-                                        <h4 class="mb-0">{{number_format(isset($clients[0]->TotalFareExpiry),1)}}</h4>
+                                    <div class="text-muted mt-4">
+                                        <h4> £ {{number_format($rd_total[0]->rd_total,2)}} <i
+                                                class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="avatar-xs me-3">
+                                                        <span
+                                                            class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                                            <i class="bx bx-purchase-tag-alt"></i>
+                                                        </span>
+                                        </div>
+                                        <h5 class="font-size-14 mb-0">Avg. Booking <br><small>Per/Month</small></h5>
+                                    </div>
+                                    <div class="text-muted mt-4">
+                                        <h4>£ {{number_format($rd_total[0]->rd_total / 30,2)}} <i
+                                                class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+
                                     </div>
                                 </div>
                             </div>
@@ -47,6 +91,7 @@
                 </div>
             </div>
         </div>
+
 
         <div id="edit-div" class=" col-12 ">
             <div class="card">
@@ -65,7 +110,7 @@
                                     <label for="formrow-firstname-input" class="form-label">First Name</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
                                            id="formrow-firstname-input" name="name" placeholder="Enter Your First Name"
-                                           value="{{ $admin_data[0]->name }}">
+                                           value="{{ $users[0]->name }}">
                                     @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -76,7 +121,7 @@
                                     <label for="formrow-email-input" class="form-label">Email</label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror"
                                            id="formrow-email-input" name="email" placeholder="Enter Your Email ID"
-                                           value="{{ $admin_data[0]->email }}" readonly>
+                                           value="{{ $users[0]->email }}" readonly>
                                     @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

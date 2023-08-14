@@ -133,12 +133,12 @@
                 var isActive = form.find('input[name="IsActive"]').val();
 
                 Swal.fire({
-                    title: 'Do you want to block this agent?',
+                    title: `Do you want to Ban this agent?`,
                     showDenyButton: true,
                     showCancelButton: false,
                     icon: 'error',
-                    confirmButtonText: 'Block',
-                    denyButtonText: `Don't Block`,
+                    confirmButtonText: '🔨 Ban',
+                    denyButtonText: `Don't Ban`,
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajaxSetup({
@@ -183,7 +183,7 @@
                     showDenyButton: true,
                     showCancelButton: false,
                     icon: 'error',
-                    confirmButtonText: 'Delete',
+                    confirmButtonText: '🧹 Delete',
                     denyButtonText: `Cancel`,
                 }).then((result) => {
                     if (result.isConfirmed) {

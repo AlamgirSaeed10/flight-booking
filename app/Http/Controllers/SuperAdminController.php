@@ -33,7 +33,7 @@ class SuperAdminController extends Controller
         $cbd_total = DB::table('customer_booking_details')->where('AgentID', $AgentID)->get();
         $rd_total =
             DB::table('customer_booking_details')
-            ->select(DB::raw("SUM(SeatQty * SeatPrice) as rd_total"))
+            ->select(DB::raw("SUM((SeatQty * SeatPrice) + BookingFee) as rd_total"))
             ->where('AgentID','=',$AgentID)
             ->get();
 

@@ -25,6 +25,7 @@ class PendingController extends Controller
     function pending_tickets()
     {
         $title = "Pending Tickets";
+
         return view('pages.client-booking.pending-tickets', compact('title'));
     }
 
